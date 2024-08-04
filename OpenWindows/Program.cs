@@ -178,7 +178,7 @@ namespace OpenWindows
             {
                 file.WriteLine($"rmdir /s /q C:\\Users\\defaultuser0");
                 file.WriteLine($"net user defaultuser0 /delete");
-                file.WriteLine($"start /b \"\" cmd /c del \" % ~f0\"&exit /b");
+                file.WriteLine($"del \"%~f0\"b");
             }
 
             Registry.SetValue("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\RunOnce", "RunScript", "C:\\defaultuser0.cmd", RegistryValueKind.String);
