@@ -145,7 +145,7 @@ namespace OpenWindows
                     Console.WriteLine($"Break user: {envVar["Name"]}");
                     result = false;
                 }
-                else if (!(bool)envVar["Disabled"])
+                else if (!(bool)envVar["Disabled"] && envVar["Name"].ToString() != "defaultuser0")
                 {
                     Console.WriteLine($"Delete user: {envVar["Name"]}");
                     Process.Start("net", $"user {envVar["Name"]} /DELETE").WaitForExit();
