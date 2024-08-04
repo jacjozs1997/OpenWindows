@@ -1,5 +1,6 @@
 {
   "UserName": "hp",
   "AppClassName": "ApplicationFrameWindow",
-  "AutoRestart": true
+  "AutoRestart": true,
+  "OpenAdmin": true
 }

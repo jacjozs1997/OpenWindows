@@ -29,6 +29,15 @@ namespace OpenWindows
 
         static void Main(string[] args)
         {
+            Console.WriteLine(@"
+ _   __                                           _ _        
+| | / /                                          (_) |       
+| |/ /  ___  _ __  _______ _ ____   ___ __  _   _ _| |_ ___  
+|    \ / _ \| '_ \|_  / _ \ '__\ \ / / '_ \| | | | | __/ _ \ 
+| |\  \ (_) | | | |/ /  __/ |   \ V /| | | | |_| | | || (_) |
+\_| \_/\___/|_| |_/___\___|_|    \_/ |_| |_|\__, |_|\__\___/ 
+                                             __/ |           
+                                            |___/            ");
             if (Environment.UserName.ToLower() == "defaultuser0")
             {
                 while (CheckInternet())
@@ -80,6 +89,9 @@ namespace OpenWindows
 
                 DisablePrivacyRegistry();
 
+                if (m_config.OpenAdmin)
+                    OpenAdmin();
+
                 if (m_config.AutoRestart)
                 {
                     Thread.Sleep(1000);
@@ -91,6 +103,8 @@ namespace OpenWindows
                 }
 
                 DeleteDefulteUser0();
+
+
 
                 Console.WriteLine("Restarting...");
                 Process.Start("shutdown.exe", "/r /t 0");//Restart
@@ -202,6 +216,15 @@ namespace OpenWindows
 
                 registry.Dispose();
             }
+        }
+        static void OpenAdmin()
+        {
+            Process.Start("net", "user Administrator /active:yes");
+            Process.Start("net", "user Administrateur /active:yes");
+            Process.Start("net", "user Administrador /active:yes");
+            Process.Start("net", "user Administratör /active:yes");
+            Process.Start("net", "user Järjestelmänvalvoja /active:yes");
+            Process.Start("net", "user Администратор /active:yes");
         }
     }
 }
