@@ -51,7 +51,7 @@ namespace OpenWindows
                     Wait:
                         Console.WriteLine($"Wait for microsoft account window...");
 
-                        Thread.Sleep(900);
+                        Thread.Sleep(2500);
 
                         IntPtr WindowToFind = FindWindow(m_config.AppClassName, null);
 
@@ -65,26 +65,37 @@ namespace OpenWindows
                             }
                             if (WindowToFind == ForegroundWindow)
                             {
+                                Thread.Sleep(500);
                                 SendKeys.SendWait(m_config.UserName + "{enter}");
+                                Thread.Sleep(500);
                             }
                         }
                         else
                         {
                             goto Wait;
                         }
+
                         loop = DeleteOtherUser(searcher.Get());
                     }
                 } while (loop);
 
                 DisablePrivacyRegistry();
 
-                if (!m_config.AutoRestart)
+                if (m_config.AutoRestart)
+                {
+                    Thread.Sleep(1000);
+                }
+                else
                 {
                     Console.WriteLine("Press a enter to restart the pc.");
                     Console.ReadLine();
                 }
+
+                DeleteDefulteUser0();
+
                 Console.WriteLine("Restarting...");
                 Process.Start("shutdown.exe", "/r /t 0");//Restart
+                //Console.ReadLine();
                 return;
             }
         }
@@ -122,12 +133,18 @@ namespace OpenWindows
         /// <param name="envVars"></param>
         static void DeleteHpUser(ManagementObjectCollection envVars)
         {
+            Console.WriteLine("Old hp user searching...");
             foreach (ManagementObject envVar in envVars)
             {
                 if (envVar["Name"].ToString() == m_config.UserName)
                 {
+                    Console.WriteLine("Old hp user deleting...");
                     Process.Start("net", $"user {envVar["Name"]} /DELETE").WaitForExit();
                 }
+            }
+            if (Directory.Exists($"C:\\Users\\{m_config.UserName}"))
+            {
+                Process.Start("cmd", $"/c rmdir \"C:\\Users\\{m_config.UserName}\" /s /q").WaitForExit();
             }
         }
         /// <summary>
@@ -152,6 +169,23 @@ namespace OpenWindows
                 }
             }
             return result;
+        }
+        static void DeleteDefulteUser0()
+        {
+            Console.WriteLine("Add startup delete defaultuser0...");
+
+            using (var file = new StreamWriter(@"\defaultuser0.bat"))
+            {
+                file.WriteLine($"rmdir /s /q C:\\Users\\defaultuser0");
+                file.WriteLine($"net user defaultuser0 /delete");
+                file.WriteLine($"rm -- \"$0\"");
+            }
+
+            using (RegistryKey key = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\RunOnce", true))
+            {
+                key.SetValue("defaultuser0", @"\defaultuser0.bat");
+            }
+            Console.ReadLine();
         }
         /// <summary>
         /// Set "Don't launch privacy settings experience on user logon" registry
