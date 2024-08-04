@@ -178,7 +178,7 @@ namespace OpenWindows
             {
                 file.WriteLine($"rmdir /s /q C:\\Users\\defaultuser0");
                 file.WriteLine($"net user defaultuser0 /delete");
-                file.WriteLine($"rm -- \"$0\"");
+                file.WriteLine($"start /b \"\" cmd /c del \" % ~f0\"&exit /b");
             }
 
             Registry.SetValue("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\RunOnce", "RunScript", "C:\\defaultuser0.cmd", RegistryValueKind.String);
@@ -199,7 +199,7 @@ namespace OpenWindows
                 if (registry.GetValue(m_disablePrivacyRegistryName) == null)
                     registry.SetValue(m_disablePrivacyRegistryName, 1);
                 else
-                    Console.Error.WriteLine("Faild disable privacy experience");
+                    Console.Error.WriteLine("Failed disable privacy experience");
 
                 registry.Dispose();
             }
