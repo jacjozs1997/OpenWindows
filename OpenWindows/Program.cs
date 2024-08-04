@@ -51,7 +51,7 @@ namespace OpenWindows
                     Wait:
                         Console.WriteLine($"Wait for microsoft account window...");
 
-                        Thread.Sleep(2500);
+                        Thread.Sleep(1000);
 
                         IntPtr WindowToFind = FindWindow(m_config.AppClassName, null);
 
