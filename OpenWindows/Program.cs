@@ -2,6 +2,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Management;
 using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
@@ -20,24 +21,38 @@ namespace OpenWindows
 
         static readonly SelectQuery m_userSelectQuery = new SelectQuery("Win32_UserAccount", "LocalAccount = True", new string[] { "Name", "Disabled" });
 
+        static string m_adminName;
+
+        static readonly string[] m_adminNames = new string[]
+        {
+            "Administrator",
+            "Administrateur",
+            "Rendszergazda",
+            "Administrador",
+            "Administratör",
+            "Järjestelmänvalvoja",
+            "Администратор",
+        };
+        #region Dll Imports
         [DllImport("user32.dll")]
         static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
         [DllImport("user32.dll")]
         static extern bool SetForegroundWindow(IntPtr hWnd);
         [DllImport("user32.dll")]
         static extern IntPtr GetForegroundWindow();
+        #endregion
 
         static void Main(string[] args)
         {
-//            Console.WriteLine(@"
-// _   __                                           _ _        
-//| | / /                                          (_) |       
-//| |/ /  ___  _ __  _______ _ ____   ___ __  _   _ _| |_ ___  
-//|    \ / _ \| '_ \|_  / _ \ '__\ \ / / '_ \| | | | | __/ _ \ 
-//| |\  \ (_) | | | |/ /  __/ |   \ V /| | | | |_| | | || (_) |
-//\_| \_/\___/|_| |_/___\___|_|    \_/ |_| |_|\__, |_|\__\___/ 
-//                                             __/ |           
-//                                            |___/            ");
+            //Console.WriteLine(@"
+            // _   __                                           _ _        
+            //| | / /                                          (_) |       
+            //| |/ /  ___  _ __  _______ _ ____   ___ __  _   _ _| |_ ___  
+            //|    \ / _ \| '_ \|_  / _ \ '__\ \ / / '_ \| | | | | __/ _ \ 
+            //| |\  \ (_) | | | |/ /  __/ |   \ V /| | | | |_| | | || (_) |
+            //\_| \_/\___/|_| |_/___\___|_|    \_/ |_| |_|\__, |_|\__\___/ 
+            //                                             __/ |           
+            //                                            |___/            ");
             if (Environment.UserName.ToLower() == "defaultuser0")
             {
                 while (CheckInternet())
@@ -104,8 +119,6 @@ namespace OpenWindows
 
                 DeleteDefulteUser0();
 
-
-
                 Console.WriteLine("Restarting...");
                 Process.Start("shutdown.exe", "/r /t 0");//Restart
                 //Console.ReadLine();
@@ -153,6 +166,10 @@ namespace OpenWindows
                 {
                     Console.WriteLine("Old hp user deleting...");
                     Process.Start("net", $"user {envVar["Name"]} /DELETE").WaitForExit();
+                }
+                if (m_adminNames.Contains(envVar["Name"].ToString()))
+                {
+                    m_adminName = envVar["Name"].ToString();
                 }
             }
             if (Directory.Exists($"C:\\Users\\{m_config.UserName}"))
@@ -219,12 +236,8 @@ namespace OpenWindows
         }
         static void OpenAdmin()
         {
-            Process.Start("net", "user Administrator /active:yes");
-            Process.Start("net", "user Administrateur /active:yes");
-            Process.Start("net", "user Administrador /active:yes");
-            Process.Start("net", "user Administratör /active:yes");
-            Process.Start("net", "user Järjestelmänvalvoja /active:yes");
-            Process.Start("net", "user Администратор /active:yes");
+            if (m_adminName != null)
+                Process.Start("net", $"user {m_adminName} /active:yes");
         }
     }
 }
