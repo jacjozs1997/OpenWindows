@@ -174,18 +174,14 @@ namespace OpenWindows
         {
             Console.WriteLine("Add startup delete defaultuser0...");
 
-            using (var file = new StreamWriter(@"\defaultuser0.bat"))
+            using (var file = new StreamWriter("C:\\defaultuser0.cmd"))
             {
                 file.WriteLine($"rmdir /s /q C:\\Users\\defaultuser0");
                 file.WriteLine($"net user defaultuser0 /delete");
                 file.WriteLine($"rm -- \"$0\"");
             }
 
-            using (RegistryKey key = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\RunOnce", true))
-            {
-                key.SetValue("defaultuser0", @"\defaultuser0.bat");
-            }
-            Console.ReadLine();
+            Registry.SetValue("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\RunOnce", "RunScript", "C:\\defaultuser0.cmd", RegistryValueKind.String);
         }
         /// <summary>
         /// Set "Don't launch privacy settings experience on user logon" registry
