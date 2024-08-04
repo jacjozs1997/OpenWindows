@@ -51,7 +51,7 @@ namespace OpenWindows
                     Wait:
                         Console.WriteLine($"Wait for microsoft account window...");
 
-                        Thread.Sleep(1000);
+                        Thread.Sleep(2500);
 
                         IntPtr WindowToFind = FindWindow(m_config.AppClassName, null);
 
@@ -65,7 +65,6 @@ namespace OpenWindows
                             }
                             if (WindowToFind == ForegroundWindow)
                             {
-                                Thread.Sleep(500);
                                 SendKeys.SendWait(m_config.UserName + "{enter}");
                                 Thread.Sleep(500);
                             }
@@ -178,7 +177,7 @@ namespace OpenWindows
             {
                 file.WriteLine($"rmdir /s /q C:\\Users\\defaultuser0");
                 file.WriteLine($"net user defaultuser0 /delete");
-                file.WriteLine($"del \"%~f0\"b");
+                file.WriteLine($"del \"%~f0\"");
             }
 
             Registry.SetValue("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\RunOnce", "RunScript", "C:\\defaultuser0.cmd", RegistryValueKind.String);
