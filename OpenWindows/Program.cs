@@ -44,15 +44,16 @@ namespace OpenWindows
 
         static void Main(string[] args)
         {
-            //Console.WriteLine(@"
-            // _   __                                           _ _        
-            //| | / /                                          (_) |       
-            //| |/ /  ___  _ __  _______ _ ____   ___ __  _   _ _| |_ ___  
-            //|    \ / _ \| '_ \|_  / _ \ '__\ \ / / '_ \| | | | | __/ _ \ 
-            //| |\  \ (_) | | | |/ /  __/ |   \ V /| | | | |_| | | || (_) |
-            //\_| \_/\___/|_| |_/___\___|_|    \_/ |_| |_|\__, |_|\__\___/ 
-            //                                             __/ |           
-            //                                            |___/            ");
+            Console.WriteLine(@"
+______ _             _   _ ______   _    _ _   _______ 
+|  ___| |           | | | || ___ \ | |  | | | | | ___ \
+| |_  | | _____  __ | |_| || |_/ / | |  | | | | | |_/ /
+|  _| | |/ _ \ \/ / |  _  ||  __/  | |/\| | | | |    / 
+| |   | |  __/>  <  | | | || |     \  /\  / |_| | |\ \ 
+\_|   |_|\___/_/\_\ \_| |_/\_|      \/  \/ \___/\_| \_|");
+
+            Console.WriteLine(m_config.OpenAdmin);
+            Console.ReadKey();
             if (Environment.UserName.ToLower() == "defaultuser0")
             {
                 while (CheckInternet())
@@ -89,8 +90,14 @@ namespace OpenWindows
                             }
                             if (WindowToFind == ForegroundWindow)
                             {
-                                SendKeys.SendWait(m_config.UserName + "{enter}");
-                                Thread.Sleep(500);
+                                Thread.Sleep(900);
+                                char[] chars = m_config.UserName.ToCharArray();
+                                foreach (char c in chars)
+                                {
+                                    SendKeys.Send("{" + c + "}");
+                                }
+                                SendKeys.Send("{enter}");
+                                Thread.Sleep(900);
                             }
                         }
                         else
@@ -237,7 +244,10 @@ namespace OpenWindows
         static void OpenAdmin()
         {
             if (m_adminName != null)
+            {
+                Console.WriteLine("Opening admin");
                 Process.Start("net", $"user {m_adminName} /active:yes");
+            }
         }
     }
 }
