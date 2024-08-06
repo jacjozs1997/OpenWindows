@@ -52,8 +52,6 @@ ______ _             _   _ ______   _    _ _   _______
 | |   | |  __/>  <  | | | || |     \  /\  / |_| | |\ \ 
 \_|   |_|\___/_/\_\ \_| |_/\_|      \/  \/ \___/\_| \_|");
 
-            Console.WriteLine(m_config.OpenAdmin);
-            Console.ReadKey();
             if (Environment.UserName.ToLower() == "defaultuser0")
             {
                 while (CheckInternet())
@@ -94,10 +92,10 @@ ______ _             _   _ ______   _    _ _   _______
                                 char[] chars = m_config.UserName.ToCharArray();
                                 foreach (char c in chars)
                                 {
-                                    SendKeys.Send("{" + c + "}");
+                                    SendKeys.SendWait("{" + c + "}");
                                 }
-                                SendKeys.Send("{enter}");
                                 Thread.Sleep(900);
+                                SendKeys.SendWait("{enter}");
                             }
                         }
                         else
